@@ -1,0 +1,2 @@
+Test Case ID,Module,Title,Priority,Type,Preconditions,Steps,Expected Result,Automated,Tags
+TC-001,Home,Verify home page loads,P1,Functional,User has internet access,Navigate to home page,Home page displays with title and navigation,N,@smoke @ui

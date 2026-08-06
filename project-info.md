@@ -190,6 +190,21 @@ Using the bearer token, the user should be able to retrieve products, add select
 | UI AC2 — Checkout + invoice | TC-MAN-007 | TC-UI-07 | TC-API-07 |
 | Negative — Invalid login | TC-MAN-008 | TC-UI-08 | TC-API-08 |
 
+### API manual cases (`FunctionalTestCase.csv`)
+
+| AC | Manual ID | Automation |
+|----|-----------|------------|
+| API AC1 — Register | TC-MAN-API-01 | TC-API-01 |
+| API AC1 — Login + token | TC-MAN-API-02 | TC-API-02 |
+| API AC1 — Create cart | TC-MAN-API-03 | TC-API-03 |
+| API AC2 — GET products | TC-MAN-API-04 | TC-API-04 |
+| API AC2 — Add to cart | TC-MAN-API-05 | TC-API-05 |
+| API AC2 — Verify cart | TC-MAN-API-06 | TC-API-06 |
+| API AC2 — POST invoice | TC-MAN-API-07 | TC-API-07 |
+| Negative — Invalid token | TC-MAN-API-08 | TC-API-08 |
+
+Full API test plan: `PrismStructure/api-test-plan.md`
+
 ---
 
 ## Architecture Reference
@@ -213,7 +228,7 @@ Using the bearer token, the user should be able to retrieve products, add select
 |-------|--------|-------------|
 | Phase 0 — Framework scaffold | ✅ Complete | Root Playwright structure |
 | Phase 1 — Requirements + manual design | ✅ Complete | This file, CSV, ai-prompts |
-| Phase 2 — Test design prompts | ⏳ Pending | `ai-prompts/test-design.md` |
-| Phase 3 — UI/API automation | ⏳ Pending | `tests/`, `pages/`, `api/endpoints/` |
+| Phase 2 — Test design prompts | ✅ Complete | `ai-prompts/test-design.md`, `PrismStructure/api-test-plan.md` |
+| Phase 3 — UI/API automation | ⏳ In progress | `tests/`, `pages/`, `api/endpoints/` |
 | Phase 4 — Execution + evidence | ⏳ Pending | `PrismStructure/` reports |
 | Phase 5 — Docs + iterative git | ⏳ Pending | README, `.cursor/`, commits |

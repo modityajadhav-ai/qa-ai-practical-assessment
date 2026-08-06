@@ -9,7 +9,31 @@ const dataGenerator = {
 
   /** Generate a unique email address for test registration. */
   randomEmail() {
-    return `testuser_${this.randomString(6)}@example.com`;
+    return `testuser_${this.randomString(6)}_${Date.now()}@example.com`;
+  },
+
+  /** Generate a unique password meeting SUT complexity rules. */
+  randomPassword() {
+    return `Zx9!mK${Date.now()}${this.randomString(3)}`;
+  },
+
+  /** Build a complete API registration payload. */
+  buildRegistrationData() {
+    return {
+      first_name: 'Test',
+      last_name: 'User',
+      email: this.randomEmail(),
+      password: this.randomPassword(),
+      dob: '1990-05-15',
+      phone: '555-123-4567',
+      address: {
+        street: '123 Main Street',
+        city: 'New York',
+        state: 'NY',
+        country: 'United States',
+        postal_code: '10001',
+      },
+    };
   },
 
   /** Generate a random integer within a range. */

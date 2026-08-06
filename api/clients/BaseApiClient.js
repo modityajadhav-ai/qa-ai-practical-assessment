@@ -32,6 +32,29 @@ class BaseApiClient {
     }
     return resolved;
   }
+
+  /**
+   * @param {string} token
+   */
+  authHeaders(token) {
+    return { Authorization: `Bearer ${token}` };
+  }
+
+  /**
+   * @param {string} endpoint
+   * @param {object} [options]
+   */
+  get(endpoint, options = {}) {
+    return this.request.get(this.buildUrl(endpoint), options);
+  }
+
+  /**
+   * @param {string} endpoint
+   * @param {object} [options]
+   */
+  post(endpoint, options = {}) {
+    return this.request.post(this.buildUrl(endpoint), options);
+  }
 }
 
 module.exports = { BaseApiClient };

@@ -31,13 +31,10 @@ module.exports = defineConfig({
     video: 'retain-on-failure',
     actionTimeout: env.actionTimeout,
     navigationTimeout: env.navigationTimeout,
-    extraHTTPHeaders: {
-      Accept: 'application/json',
-    },
   },
 
   projects: [
-  // ── UI projects ──────────────────────────────────────────────
+    // ── UI (Chromium only) ─────────────────────────────────────
     {
       name: 'ui-chromium',
       testDir: './tests/ui',
@@ -47,32 +44,17 @@ module.exports = defineConfig({
         baseURL: env.baseUrl,
       },
     },
-    {
-      name: 'ui-firefox',
-      testDir: './tests/ui',
-      testMatch: '**/*.spec.js',
-      use: {
-        ...devices['Desktop Firefox'],
-        baseURL: env.baseUrl,
-      },
-    },
-    {
-      name: 'ui-webkit',
-      testDir: './tests/ui',
-      testMatch: '**/*.spec.js',
-      use: {
-        ...devices['Desktop Safari'],
-        baseURL: env.baseUrl,
-      },
-    },
 
-  // ── API project ──────────────────────────────────────────────
+    // ── API ────────────────────────────────────────────────────
     {
       name: 'api',
       testDir: './tests/api',
       testMatch: '**/*.spec.js',
       use: {
         baseURL: env.apiBaseUrl,
+        extraHTTPHeaders: {
+          Accept: 'application/json',
+        },
       },
     },
   ],

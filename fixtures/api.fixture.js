@@ -1,16 +1,21 @@
-const { test as base } = require('@playwright/test');
-const { BaseApiClient } = require('../api/clients/BaseApiClient');
+const { test: base } = require('@playwright/test');
+const { AuthService } = require('../api/endpoints/AuthService');
+const { ProductsService } = require('../api/endpoints/ProductsService');
+const { CartService } = require('../api/endpoints/CartService');
+const { InvoicesService } = require('../api/endpoints/InvoicesService');
 
-/**
- * Extended Playwright test fixture for API tests.
- * Provides a shared API client via the test context.
- *
- * Usage:
- *   const { test, expect } = require('../../fixtures/api.fixture');
- */
 const test = base.extend({
-  apiClient: async ({ request }, use) => {
-    await use(new BaseApiClient(request));
+  authService: async ({ request }, use) => {
+    await use(new AuthService(request));
+  },
+  productsService: async ({ request }, use) => {
+    await use(new ProductsService(request));
+  },
+  cartService: async ({ request }, use) => {
+    await use(new CartService(request));
+  },
+  invoicesService: async ({ request }, use) => {
+    await use(new InvoicesService(request));
   },
 });
 

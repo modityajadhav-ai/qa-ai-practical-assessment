@@ -39,6 +39,9 @@ class CheckoutPage extends BasePage {
       country: 'United States of America (the)',
       postalCode: '33101',
       houseNumber: '123',
+      street: '123 Main Street',
+      city: 'Miami',
+      state: 'FL',
     };
     const billing = { ...defaults, ...address };
 
@@ -50,14 +53,29 @@ class CheckoutPage extends BasePage {
     await postalCode.fill(billing.postalCode);
     await postalCode.press('Tab');
 
-    const houseNumber = this.page.locator('[data-test="house_number"]');
-    await houseNumber.fill(billing.houseNumber);
-    await houseNumber.press('Tab');
-
     await this.page.waitForResponse(
       (response) => response.url().includes('postcode-lookup') && response.status() < 400,
       { timeout: 15000 },
     ).catch(() => null);
+
+    const houseNumber = this.page.locator('[data-test="house_number"]');
+    await houseNumber.fill(billing.houseNumber);
+    await houseNumber.press('Tab');
+
+    const street = this.page.getByLabel('Street');
+    if (await street.isVisible()) {
+      await street.fill(billing.street);
+    }
+
+    const city = this.page.getByLabel('City');
+    if (await city.isVisible()) {
+      await city.fill(billing.city);
+    }
+
+    const state = this.page.getByLabel('State');
+    if (await state.isVisible()) {
+      await state.fill(billing.state);
+    }
 
     await this.page.locator('[data-test="proceed-3"]:enabled').waitFor({
       state: 'visible',
@@ -89,9 +107,9 @@ class CheckoutPage extends BasePage {
     });
 
     const invoiceCreate = this.page.waitForResponse(
-      (response) => response.url().includes('/invoices') && response.status() === 201,
+      (response) => response.url().includes('/invoices') && response.request().method() === 'POST',
       { timeout: 20000 },
-    );
+    ).catch(() => null);
     await finish.click();
     await invoiceCreate;
     await this.page.getByText(/invoice number is INV-/i).waitFor({

@@ -6,7 +6,8 @@ test.describe('Login negative @ui', () => {
     page,
   }) => {
     await loginPage.goto();
-    await loginPage.login('invalid@example.com', 'WrongPass99!');
+    const result = await loginPage.attemptLogin('invalid@example.com', 'WrongPass99!');
+    expect(result.ok).toBe(false);
 
     await expect(page).toHaveURL(/\/auth\/login/);
     await expect(page.locator('#email')).toBeVisible();

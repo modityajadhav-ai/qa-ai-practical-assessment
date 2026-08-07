@@ -11,7 +11,7 @@ module.exports = defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  workers: process.env.CI ? 2 : 1,
   timeout: env.testTimeout,
   expect: {
     timeout: env.expectTimeout,
@@ -39,6 +39,7 @@ module.exports = defineConfig({
       name: 'ui-chromium',
       testDir: './tests/ui',
       testMatch: '**/*.spec.js',
+      fullyParallel: false,
       use: {
         ...devices['Desktop Chrome'],
         baseURL: env.baseUrl,

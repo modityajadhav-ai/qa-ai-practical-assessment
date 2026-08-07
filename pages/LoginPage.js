@@ -7,13 +7,50 @@ class LoginPage extends BasePage {
   }
 
   /**
+   * Submit login form and return whether the API accepted credentials.
+   * @param {string} email
+   * @param {string} password
+   */
+  async attemptLogin(email, password) {
+    await this.page.locator('#email').fill(email);
+    await this.page.locator('#password').fill(password);
+
+    const loginResponse = this.page.waitForResponse(
+      (response) => response.url().includes('/users/login'),
+      { timeout: 20000 },
+    );
+    await this.page.getByRole('button', { name: 'Login' }).click();
+    const response = await loginResponse;
+    const status = response.status();
+    let body = '';
+
+    if (!response.ok()) {
+      try {
+        body = await response.text();
+      } catch {
+        body = '';
+      }
+    }
+
+    return {
+      ok: response.ok(),
+      status,
+      body,
+    };
+  }
+
+  /**
    * @param {string} email
    * @param {string} password
    */
   async login(email, password) {
-    await this.page.locator('#email').fill(email);
-    await this.page.locator('#password').fill(password);
-    await this.page.locator('input[type="submit"]').click();
+    const result = await this.attemptLogin(email, password);
+
+    if (!result.ok) {
+      throw new Error(`Login failed (${result.status}): ${result.body}`);
+    }
+
+    await this.page.waitForURL(/\/account/, { timeout: 20000 });
   }
 
   async getErrorMessage() {

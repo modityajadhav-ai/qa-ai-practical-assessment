@@ -12,6 +12,17 @@ npm run test:smoke
 npm run report
 ```
 
+## Execution Evidence
+
+Committed execution summary: `PrismStructure/execution-report.md` and `PrismStructure/execution-summary.json`.
+
+Regenerate live HTML/JSON reports locally (gitignored):
+
+```bash
+npm test
+npm run report   # opens reports/html/
+```
+
 ## Project Structure
 
 ```

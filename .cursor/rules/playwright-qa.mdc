@@ -1,0 +1,43 @@
+---
+description: Playwright QA assessment conventions — tags, test limits, and execution
+alwaysApply: true
+---
+
+# Playwright QA Assessment Rules
+
+## Scope
+
+- SUT: https://practicesoftwaretesting.com (UI) and https://api.practicesoftwaretesting.com (API)
+- Max 5–8 test cases per tier: manual, UI automation, API automation
+- AC1: Registration/login/profile (UI) and auth/cart (API)
+- AC2: Products/cart/checkout/invoice (UI) and products/cart/invoice (API)
+
+## Tags
+
+Use Playwright grep tags on every spec title:
+
+- `@smoke` — critical path
+- `@regression` — full AC coverage + negatives
+- `@ui` or `@api` — project marker
+
+Example: `test('TC-UI-02 should login @smoke @regression @ui', ...)`
+
+## Test design
+
+- UI: Page Object Model in `pages/`; no raw locators in specs when a page exists
+- API: Service classes in `api/endpoints/`; use `fixtures/api.fixture.js`
+- Prefer dynamic users (`data-generator.js`, API register) over shared demo account (lockout risk)
+- UI checkout: Cash on Delivery requires **two Confirm clicks**; wait between payment check and invoice
+
+## Execution
+
+- UI runs on Chromium only (`ui-chromium` project)
+- Local default: 1 worker for UI stability
+- Reports: `reports/html`, `reports/json`, `reports/junit` (gitignored)
+- Committed evidence: `PrismStructure/execution-report.md`
+
+## Do not
+
+- Add dependencies without justification
+- Hardcode credentials in code or CSV
+- Paste secrets into AI prompts or docs

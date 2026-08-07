@@ -43,13 +43,13 @@ Record of Cursor AI prompts used for understanding the Toolshop flow, identifyin
 
 ---
 
-## Entry 4 — Test Planning Prompt (for Phase 2 reference)
+## Entry 4 — Test Planning Prompt (Phase 2)
 
-- **Prompt (planned):**
+- **Prompt:**
   > From UI AC1 and AC2, list smoke vs regression scenarios for Playwright automation. Max 8 UI and 8 API specs. Map each to TC-MAN-xxx CSV IDs.
 
 - **AI Response (summary):**
-  _(Pending — use in Phase 2/3 when writing automation specs)_
+  Defined smoke vs regression matrix in `project-info.md`. UI smoke: register, login, profile, products (TC-UI-01–04). UI regression: cart multi-item, quantity, checkout+invoice, invalid login (TC-UI-05–08). API smoke: register, login, cart, products (TC-API-01–04). API regression: add/verify cart, invoice, invalid token (TC-API-05–08). Documented in `ai-prompts/test-design.md` and `PrismStructure/api-test-plan.md`.
 
 - **Validation Notes:**
-  _(Pending)_
+  Stayed within 8 cases per tier. TC-MAN-007 / TC-UI-07 include double Confirm for invoice. Negative coverage via TC-UI-08 and TC-API-08.

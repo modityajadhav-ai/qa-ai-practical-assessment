@@ -1,0 +1,44 @@
+{
+  "executionDate": "2026-08-07",
+  "command": "npm test",
+  "projects": ["ui-chromium", "api"],
+  "workers": 1,
+  "durationMinutes": 2.2,
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "status": "PASSED"
+  },
+  "ui": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "tests": [
+      { "id": "TC-UI-01", "status": "passed", "spec": "tests/ui/smoke/registration.spec.js" },
+      { "id": "TC-UI-02", "status": "passed", "spec": "tests/ui/smoke/login.spec.js" },
+      { "id": "TC-UI-03", "status": "passed", "spec": "tests/ui/smoke/profile.spec.js" },
+      { "id": "TC-UI-04", "status": "passed", "spec": "tests/ui/smoke/products.spec.js" },
+      { "id": "TC-UI-05", "status": "passed", "spec": "tests/ui/regression/cart.spec.js" },
+      { "id": "TC-UI-06", "status": "passed", "spec": "tests/ui/regression/cart.spec.js" },
+      { "id": "TC-UI-07", "status": "passed", "spec": "tests/ui/regression/checkout.spec.js" },
+      { "id": "TC-UI-08", "status": "passed", "spec": "tests/ui/regression/login-negative.spec.js" }
+    ]
+  },
+  "api": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "tests": [
+      { "id": "TC-API-01", "status": "passed", "spec": "tests/api/smoke/register.spec.js" },
+      { "id": "TC-API-02", "status": "passed", "spec": "tests/api/smoke/login.spec.js" },
+      { "id": "TC-API-03", "status": "passed", "spec": "tests/api/smoke/cart.spec.js" },
+      { "id": "TC-API-04", "status": "passed", "spec": "tests/api/smoke/products.spec.js" },
+      { "id": "TC-API-05", "status": "passed", "spec": "tests/api/regression/cart-flow.spec.js" },
+      { "id": "TC-API-06", "status": "passed", "spec": "tests/api/regression/cart-flow.spec.js" },
+      { "id": "TC-API-07", "status": "passed", "spec": "tests/api/regression/invoice.spec.js" },
+      { "id": "TC-API-08", "status": "passed", "spec": "tests/api/regression/auth-negative.spec.js" }
+    ]
+  }
+}

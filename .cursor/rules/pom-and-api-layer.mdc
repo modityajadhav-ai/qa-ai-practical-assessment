@@ -1,0 +1,33 @@
+---
+description: POM and API service layer patterns for this Playwright project
+globs: pages/**/*.js,api/**/*.js,tests/**/*.js
+alwaysApply: false
+---
+
+# POM and API Layer Patterns
+
+## Page objects (`pages/`)
+
+- Extend `BasePage`; routes from `constants/routes.js`
+- Locators: prefer `[data-test="..."]`, then stable IDs (`#email`, `#payment-method`)
+- Actions return promises; assertions stay in specs or use explicit wait helpers
+- Login: `getByRole('button', { name: 'Login' })` — not `input[type=submit]`
+
+## API services (`api/endpoints/`)
+
+- Extend `BaseApiClient` from `api/clients/BaseApiClient.js`
+- Endpoints from `constants/api-endpoints.js`
+- Auth: pass Bearer token from login response, not hardcoded
+
+## Specs (`tests/`)
+
+- UI specs: import from `fixtures/ui.fixture.js`
+- API specs: import from `fixtures/api.fixture.js`
+- Test names: `TC-UI-XX` / `TC-API-XX` matching manual CSV traceability
+- `beforeEach` for shared login/setup; keep tests independent
+
+## Helpers
+
+- `helpers/ui-auth.helper.js` — `registerAndLogin()`, `loginAsCustomer()`
+- `helpers/api.helper.js` — `findInStockProduct()`
+- `utils/data-generator.js` — unique email/password for registration

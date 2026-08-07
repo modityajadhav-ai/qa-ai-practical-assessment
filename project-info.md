@@ -6,7 +6,7 @@
 
 **Assessment Start Date:** 06 Aug 2026
 
-**Submission Date:** _(update before final submission)_
+**Submission Date:** 07 Aug 2026
 
 ---
 
@@ -219,6 +219,8 @@ Full API test plan: `PrismStructure/api-test-plan.md`
 | Base API client | `api/clients/BaseApiClient.js` |
 | Full architecture guide | `docs/ARCHITECTURE.md` |
 | README / run commands | `README.md` |
+| Execution report | `PrismStructure/execution-report.md` |
+| Cursor rules | `.cursor/rules/` |
 
 ---
 
@@ -229,6 +231,6 @@ Full API test plan: `PrismStructure/api-test-plan.md`
 | Phase 0 — Framework scaffold | ✅ Complete | Root Playwright structure |
 | Phase 1 — Requirements + manual design | ✅ Complete | This file, CSV, ai-prompts |
 | Phase 2 — Test design prompts | ✅ Complete | `ai-prompts/test-design.md`, `PrismStructure/api-test-plan.md` |
-| Phase 3 — UI/API automation | ⏳ In progress | `tests/`, `pages/`, `api/endpoints/` |
-| Phase 4 — Execution + evidence | ⏳ Pending | `PrismStructure/` reports |
-| Phase 5 — Docs + iterative git | ⏳ Pending | README, `.cursor/`, commits |
+| Phase 3 — UI/API automation | ✅ Complete | `tests/`, `pages/`, `api/endpoints/` |
+| Phase 4 — Execution + evidence | ✅ Complete | `PrismStructure/execution-report.md`, `execution-summary.json` |
+| Phase 5 — Docs + iterative git | ✅ Complete | README, `.cursor/rules/`, ai-prompts, git history |

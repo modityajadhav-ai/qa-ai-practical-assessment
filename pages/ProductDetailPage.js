@@ -27,8 +27,17 @@ class ProductDetailPage extends BasePage {
     );
 
     await addButton.click();
-    await cartResponse.catch(() => null);
-    await this.page.waitForTimeout(1500);
+    const response = await cartResponse;
+    if (!response.ok()) {
+      throw new Error(`Add to cart failed: ${response.status()} ${await response.text()}`);
+    }
+
+    const cartBadge = this.page.locator('[data-test="cart-quantity"]');
+    await cartBadge.waitFor({ state: 'visible', timeout: 15000 });
+    await this.page.waitForFunction(() => {
+      const badge = document.querySelector('[data-test="cart-quantity"]');
+      return badge && badge.textContent && badge.textContent.trim() !== '0';
+    }, { timeout: 15000 });
   }
 
   async getProductName() {

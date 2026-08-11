@@ -1,81 +1,41 @@
-# AI Prompts — Test Data
+# AI Prompts – Test Data
 
-Prompts used to generate and validate test data for UI and API automation.
+## Entry 1: User Registration Data
 
----
+- **Prompt:** "Generate a test data strategy for user registration on the Toolshop. I need unique users per test run to avoid conflicts on the shared public server."
 
-## Entry 1 — Dynamic Registration Data
+- **AI Response Summary:** Recommended timestamp-based unique emails and a centralized factory. Implemented as `utils/data-generator.js` with `randomEmail()` (`testuser_<random>_<timestamp>@example.com`) and `buildRegistrationData()` for full API registration payloads.
 
-- **Prompt:**
-  > How should test data avoid duplicate registration failures on the public SUT? Generate unique users for UI register and API register tests.
+- **Validation Notes:** Works on the public test server. UI flows also use `test-data/ui/registration-user.json` as a template combined with dynamic email/password from `helpers/ui-auth.helper.js` (`buildUiUser()`). Prefer dynamic users over the shared demo account (`customer@practicesoftwaretesting.com`) to avoid lockout.
 
-- **AI Response (summary):**
-  Added `utils/data-generator.js` with `randomEmail()`, `randomPassword()`, and `buildRegistrationData()` using timestamp + random string. UI registration uses `readJson('ui/registration-user.json')` merged with dynamic email/password.
+## Entry 2: API Request Payloads
 
-- **Validation Notes:**
-  Email format: `testuser_{random}_{timestamp}@example.com`. Password includes complexity + timestamp. Verified 201 from `POST /users/register` across repeated runs.
+- **Prompt:** "Generate the invoice creation API payload for the Toolshop API. The endpoint is POST /invoices and requires billing details and cart_id."
 
----
+- **AI Response Summary:** Generated payload stored in `test-data/api/invoice-payload.json`:
+  ```json
+  {
+    "billing_street": "Zoey Shore",
+    "billing_city": "Hesselbury",
+    "billing_state": "Florida",
+    "billing_country": "TG",
+    "billing_postal_code": "1234AA",
+    "payment_method": "cash-on-delivery",
+    "payment_details": {}
+  }
+  ```
+  Tests merge this template with a dynamic `cart_id` from `POST /carts`.
 
-## Entry 2 — Static UI Registration Template
+- **Validation Notes:** Verified against Swagger and assignment examples. Country is 2-letter ISO (TG, IN, US). `payment_method` must be exactly `cash-on-delivery`. Invoice creation returns HTTP 201 with `invoice_number` matching `INV-`.
 
-- **Prompt:**
-  > Create JSON test data for UI registration form fields (country, postal code, DOB, phone).
+## Entry 3: Negative Test Data
 
-- **AI Response (summary):**
-  Created `test-data/ui/registration-user.json` with firstName, lastName, dob, country (`United States of America (the)`), postalCode `33101`, houseNumber, phone.
+- **Prompt:** "What test data should I use for negative/edge cases? Specifically: invalid login, duplicate registration, and invalid cart operations."
 
-- **Validation Notes:**
-  Country label matches SUT dropdown text exactly. Used by `registration.spec.js` and `buildUiUser()` in `ui-auth.helper.js`.
+- **AI Response Summary:**
+  - Invalid login: `invalid@test.com` / `wrongpassword` (non-existent user)
+  - Duplicate registration: Use `customer@practicesoftwaretesting.com` (default user, always exists)
+  - Invalid cart: quantity=0 or quantity=-1 to trigger validation errors
+  - Empty cart invoice: Create cart via API but don't add items before invoicing
 
----
-
-## Entry 3 — API Invoice Payload
-
-- **Prompt:**
-  > Use assignment invoice POST body example. Merge dynamic cart_id at runtime.
-
-- **AI Response (summary):**
-  Created `test-data/api/invoice-payload.json` based on assessment doc sample (billing fields, `payment_method: cash-on-delivery`, `payment_details: {}`). `invoice.spec.js` reads JSON and sets `cart_id` from freshly created cart.
-
-- **Validation Notes:**
-  Validated against OpenAPI `InvoiceRequest`. Invoice number matches `INV-*` pattern; total > 0 on success.
-
----
-
-## Entry 4 — Checkout Billing Address Data
-
-- **Prompt:**
-  > Checkout billing postcode lookup returns random invalid city/state. What address data should automation use?
-
-- **AI Response (summary):**
-  Default billing in `CheckoutPage.fillBillingAddress()`: country US, postal `33101`, house `123`, street `123 Main Street`, city `Miami`, state `FL`. Explicit city/state override after lookup prevents invoice 422 errors.
-
-- **Validation Notes:**
-  Confirmed `POST /invoices` returns 201 when billing fields align with `billing_country` US selection.
-
----
-
-## Entry 5 — Environment vs Hardcoded Credentials
-
-- **Prompt:**
-  > Should tests use demo customer account or .env credentials?
-
-- **AI Response (summary):**
-  `constants/test-users.js` documents demo customer for reference. `loginAsCustomer()` prefers `TEST_USER_EMAIL` / `TEST_USER_PASSWORD` from `.env` when set; otherwise registers fresh user via API to avoid account lockout (HTTP 423).
-
-- **Validation Notes:**
-  Never commit `.env`. `.env.example` documents optional overrides. Secrets not pasted into AI prompts.
-
----
-
-## Entry 6 — API Cart Flow Test Data Chain
-
-- **Prompt:**
-  > How to chain register → login → cart → product → add item in API regression tests?
-
-- **AI Response (summary):**
-  `cart-flow.spec.js` uses `beforeEach`: `buildRegistrationData()` → register → login → `findInStockProduct()` from GET /products → create cart → store token, cartId, productId for TC-API-05 and TC-API-06.
-
-- **Validation Notes:**
-  Fresh user and cart per test avoids stale `cart_id` and token expiry risks documented in risk table.
+- **Validation Notes:** Confirmed the existing user email is always available on the public server. The server resets data periodically but default accounts persist.

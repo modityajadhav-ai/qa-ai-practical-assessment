@@ -1,55 +1,50 @@
-# AI Prompts — Requirements and Planning
+# AI Prompts – Requirements and Planning
 
-Record of Cursor AI prompts used for understanding the Toolshop flow, identifying risks, and drafting the test plan.
+## Entry 1: Understanding the Application
 
----
+- **Prompt:** "Analyze the Practice Software Testing Toolshop (https://practicesoftwaretesting.com/). It's an e-commerce app for tools. I need to test: user registration, login, product browsing, cart management, checkout with Cash on Delivery, and invoice verification. The API docs are at https://api.practicesoftwaretesting.com/api/documentation. Identify the key testable flows and risks."
 
-## Entry 1 — Playwright Framework Architecture (Phase 0)
+- **AI Response Summary:** The AI identified the following key flows:
+  1. User Registration & Login (AC1)
+  2. End-to-End Purchase Flow (AC2)
+  3. Cart CRUD operations
+  4. Invoice generation and viewing
+  
+  Key risks identified:
+  - Double confirm button requirement for invoice (unique app behavior)
+  - Session/token expiry during long checkout flows
+  - Data conflicts with shared test environment (multiple users testing simultaneously)
+  - API rate limiting on public test server
 
-- **Prompt:**
-  > You are an experienced QA Automation Architect. Create a scalable Playwright project structure that supports both UI and API automation. Follow POM. Separate UI and API tests. Reusable utilities, fixtures, test data, constants, helpers. Support Smoke and Regression via Playwright tags. HTML reporting. Environment variables via .env. Do not generate automation scripts yet — only project architecture.
+## Entry 2: Risk Analysis
 
-- **AI Response (summary):**
-  Generated full folder scaffold: `config/`, `constants/`, `pages/base/`, `api/clients/`, `fixtures/`, `helpers/`, `utils/`, `test-data/`, `tests/ui/` and `tests/api/` (smoke/regression), `playwright.config.js` with 4 projects (ui-chromium, ui-firefox, ui-webkit, api), HTML/JSON/JUnit reporters, `package.json` scripts, `.env.example`, `docs/ARCHITECTURE.md`, and naming conventions.
+- **Prompt:** "For the Toolshop application, what are the top risks from a QA perspective? Consider: data integrity, authentication, payment flow, and concurrent user access."
 
-- **Validation Notes:**
-  Accepted scaffold structure. Verified separation of UI/API test dirs and tag-based npm scripts. Deferred actual page objects and specs per instruction. Added `PrismStructure/` and assessment folders to align with submission template.
+- **AI Response Summary:** Top risks ranked:
+  1. HIGH: Invoice generation requires double-confirm (non-standard UX, easy to miss)
+  2. HIGH: Authentication token expiry mid-checkout could lose cart state
+  3. MEDIUM: Shared test environment — test data from other users may interfere
+  4. MEDIUM: No real payment gateway — COD is the only testable method
+  5. LOW: Product stock management not enforced (unlimited inventory)
 
----
+## Entry 3: Requirement Validation
 
-## Entry 2 — Assignment Document Alignment
+- **Prompt:**  "Review my planned smoke and regression scope for the Toolshop assignment. Identify any missing critical scenarios."
 
-- **Prompt:**
-  > Shared QA Practical Assessment .docx — this is the assignment structure I am following which I have to complete.
+- **AI Response Summary:** 
 
-- **AI Response (summary):**
-  Extracted assignment requirements: Part A (30%) `project-info.md` AI workflow, Part B (70%) manual + UI + API automation. Mapped required repo structure (`FunctionalTestCase.csv`, `PrismStructure`, `ai-prompts/`, `.cursor/`). Identified AC1/AC2 for UI and API, double-confirm invoice behaviour, 5–8 test cases per tier, iterative git commits, execution reports all Passed. Provided phase-wise completion plan and gap analysis against current repo.
+Suggested adding:
 
-- **Validation Notes:**
-  Confirmed our scaffold exceeds minimum structure but gaps remain: empty CSV, empty PrismStructure, Part A sections in project-info, no automation tests, no execution evidence. Adopted doc's phase flow (requirements → manual → automate → execute → document).
+- Invoice generation verification
+- Invalid login
+- Duplicate registration
+- API authentication validation
+- Cart update scenarios
 
----
+- Validation Notes:
 
-## Entry 3 — Start Phase 1
+Compared suggestions against assignment requirements.
 
-- **Prompt:**
-  > Yes start (Phase 1: expanded project-info.md, FunctionalTestCase.csv, ai-prompts requirements entry)
+Accepted invoice verification (TC-UI-07, TC-API-07) and invalid-auth negatives (TC-UI-08, TC-API-08).
 
-- **AI Response (summary):**
-  Expanded `project-info.md` with Part A all 10 AI workflow sections, requirement/risk analysis, traceability matrix, phase progress. Created 8 manual test cases in CSV mapped to UI AC1/AC2. Added `PrismStructure/requirements-and-risk-analysis.md`. Documented prompt history in this file.
-
-- **Validation Notes:**
-  Manual cases limited to 8 rows per assignment scope. TC-MAN-007 explicitly includes double Confirm for invoice. TC-MAN-008 adds negative coverage. API manual cases deferred to automation phase with planned TC-API-01–08 in traceability matrix. Dates set to assessment start 06 Aug 2026; submission date left for user to fill.
-
----
-
-## Entry 4 — Test Planning Prompt (Phase 2)
-
-- **Prompt:**
-  > From UI AC1 and AC2, list smoke vs regression scenarios for Playwright automation. Max 8 UI and 8 API specs. Map each to TC-MAN-xxx CSV IDs.
-
-- **AI Response (summary):**
-  Defined smoke vs regression matrix in `project-info.md`. UI smoke: register, login, profile, products (TC-UI-01–04). UI regression: cart multi-item, quantity, checkout+invoice, invalid login (TC-UI-05–08). API smoke: register, login, cart, products (TC-API-01–04). API regression: add/verify cart, invoice, invalid token (TC-API-05–08). Documented in `ai-prompts/test-design.md` and `PrismStructure/api-test-plan.md`.
-
-- **Validation Notes:**
-  Stayed within 8 cases per tier. TC-MAN-007 / TC-UI-07 include double Confirm for invoice. Negative coverage via TC-UI-08 and TC-API-08.
+Deferred duplicate-registration automation — covered in planning/risk notes but not in the final 8-case UI/API automation scope.

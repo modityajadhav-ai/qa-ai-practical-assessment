@@ -1,29 +1,51 @@
-# AI Prompts — Test Design
+# AI Prompts – Test Design
 
-Prompts used to generate or refine test scenarios and test cases for UI + API.
+## Entry 1: UI Test Scenarios
 
----
+- **Prompt:** "Generate 8 UI test cases for the Practice Software Testing Toolshop covering: registration, login, cart, checkout, and invoice. Include positive, negative, and edge cases. Tag each as @smoke or @regression."
 
-## Entry 1 — API OpenAPI Test Plan (Phase 2)
+- **AI Response Summary:** Generated 8 UI test cases (aligned to automated specs in `tests/ui/`):
+  - TC-UI-01: Register new user with valid details (@smoke @regression) — `registration.spec.js`
+  - TC-UI-02: Login with valid credentials (@smoke @regression) — `login.spec.js`
+  - TC-UI-03: Verify profile information after login (@smoke) — `profile.spec.js`
+  - TC-UI-04: Browse products listing (@smoke) — `products.spec.js`
+  - TC-UI-05: Add multiple products to cart (@regression) — `cart.spec.js`
+  - TC-UI-06: Update product quantity in cart (@regression) — `cart.spec.js`
+  - TC-UI-07: Complete COD checkout and view invoice (@regression) — `checkout.spec.js`
+  - TC-UI-08: Reject invalid login credentials (@regression) — `login-negative.spec.js`
 
-- **Prompt:**
-  > Shared Toolshop OpenAPI 3.2.0 JSON. Add manual API test cases and create a test plan mapped to API AC1 (register, login, token, cart) and API AC2 (products, cart, invoice). Limit to 8 manual API cases. Include smoke vs regression, endpoint matrix, test data samples, and automation mapping.
+- **Validation Notes:**  
+- Verified every generated test case against the acceptance criteria.
+- Removed duplicate scenarios.
+- Added smoke/regression tags.
+- Included application-specific "Confirm twice" checkout behavior.
+- Ensured positive, negative and edge cases were balanced.
+- Confirmed all scenarios were automatable using Playwright.
 
-- **AI Response (summary):**
-  Added 8 manual API rows to `FunctionalTestCase.csv` as `TC-MAN-API-01` through `TC-MAN-API-08`. Created `PrismStructure/api-test-plan.md` with scope, endpoint matrix, E2E flow diagram, test data strategy (registration, login, cart, invoice payloads), smoke/regression split, manual execution guide, risks, and traceability to `TC-API-01`–`08` automation specs.
+## Entry 2: API Test Scenarios
 
-- **Validation Notes:**
-  Endpoints verified against live API (`/users/login` not `/api/users/login`). Invoice POST requires Bearer auth per OpenAPI `security: apiAuth`. Negative case uses GET `/users/me` with invalid token (401). Out-of-scope OpenAPI areas (reports, admin DELETE, TOTP) documented but excluded to stay within 5–8 case limit.
+- **Prompt:** "Generate 8 API test cases for the Toolshop API (base: https://api.practicesoftwaretesting.com). Cover: user registration, login, cart creation, product retrieval, invoice generation. Include negative cases."
 
----
+- **AI Response Summary:** Generated 8 API test cases (aligned to automated specs in `tests/api/`):
+  - TC-API-01: Register user via POST /users/register (@smoke) — `register.spec.js`
+  - TC-API-02: Login and get bearer token (@smoke @regression) — `login.spec.js`
+  - TC-API-03: Create new cart with authentication (@smoke) — `cart.spec.js`
+  - TC-API-04: Retrieve products list (@smoke) — `products.spec.js`
+  - TC-API-05: Add in-stock product to cart (@regression) — `cart-flow.spec.js`
+  - TC-API-06: Verify cart contents after add item (@regression) — `cart-flow.spec.js`
+  - TC-API-07: Generate invoice for cart with COD (@regression) — `invoice.spec.js`
+  - TC-API-08: Reject request with invalid bearer token (@regression) — `auth-negative.spec.js`
 
-## Entry 2 — UI Test Design (Phase 1 reference)
+- **Validation Notes:** Endpoint paths match Swagger. Creation endpoints return 201 (register, cart, invoice). Token chain: register → login → token → cart → add item → invoice. Manual CSV uses `TC-MAN-*` IDs in `FunctionalTestCase/FunctionalTestCase.csv`; automation uses `TC-UI-*` / `TC-API-*` with matching AC coverage.
 
-- **Prompt:**
-  > From UI AC1 and AC2, list smoke vs regression scenarios for Playwright automation.
+## Entry 3: Test Case Traceability
 
-- **AI Response (summary):**
-  Defined TC-MAN-001–008 for UI manual cases and TC-UI-01–08 for automation mapping in `project-info.md` traceability matrix.
+- **Prompt:** "Map my test cases to the acceptance criteria: AC1 (Registration & Login) and AC2 (End-to-End Purchase Flow). Show which TCs validate which AC."
 
-- **Validation Notes:**
-  TC-MAN-007 includes double Confirm for invoice per assignment doc.
+- **AI Response Summary:**
+  - UI AC1 (registration, login, profile): TC-UI-01, TC-UI-02, TC-UI-03, TC-UI-08
+  - UI AC2 (products, cart, checkout, invoice): TC-UI-04, TC-UI-05, TC-UI-06, TC-UI-07
+  - API AC1 (auth, cart creation): TC-API-01, TC-API-02, TC-API-03, TC-API-08
+  - API AC2 (products, cart items, invoice): TC-API-04, TC-API-05, TC-API-06, TC-API-07
+
+- **Validation Notes:** Every AC has smoke and regression coverage across UI and API. Negative cases: TC-UI-08 (invalid login), TC-API-08 (invalid token). Checkout double-Confirm behavior is covered in TC-UI-07 and documented in `pages/CheckoutPage.js`.

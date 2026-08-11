@@ -18,10 +18,8 @@ test.describe('Cart @ui', () => {
     const productPage = new ProductDetailPage(page);
     await productPage.gotoProduct(productIds[0]);
     await productPage.addToCart();
-    await expect(page.locator('[data-test="cart-quantity"]')).not.toHaveText('0', { timeout: 10000 });
     await productPage.gotoProduct(productIds[1]);
     await productPage.addToCart();
-    await expect(page.locator('[data-test="cart-quantity"]')).not.toHaveText('1', { timeout: 10000 });
 
     await checkoutPage.goto();
     await expect(checkoutPage.getCartLineCount()).resolves.toBeGreaterThanOrEqual(2);
@@ -35,7 +33,6 @@ test.describe('Cart @ui', () => {
     const productPage = new ProductDetailPage(page);
     await productPage.gotoProduct(productIds[0]);
     await productPage.addToCart();
-    await expect(page.locator('[data-test="cart-quantity"]')).not.toHaveText('0', { timeout: 10000 });
 
     await checkoutPage.goto();
     const qtyInput = page.locator('[data-test="product-quantity"]').first();

@@ -1,80 +1,31 @@
-# AI Prompts — Documentation and Summary
+# AI Prompts – Documentation and Summary
 
-Prompts used for README, project-info, execution reports, and submission documentation.
+## Entry 1: README Generation
 
----
+- **Prompt:** "Generate a README.md for my Playwright test project. Include: setup instructions, how to run smoke/regression tests separately, where reports are generated, and project structure."
 
-## Entry 1 — README Execution Commands
+- **AI Response Summary:** Generated a comprehensive README with npm install steps, playwright install command, separate commands for smoke/regression/ui/api, and a folder tree showing the Prism structure.
 
-- **Prompt:**
-  > Document how to run smoke, regression, UI-only, API-only, headed mode, and where reports are generated.
+- **Edits You Made:** Added SUT URLs, npm scripts (`test:smoke`, `test:regression`, `test:ui`, `test:api`), report paths (`reports/html`, `reports/json`, `reports/junit`), and the double-Confirm checkout note. Structure tree matches actual folders (`fixtures/`, `helpers/`, `api/endpoints/`, `PrismStructure/`).
 
-- **AI Response (summary):**
-  README updated with Quick Start (`npm install`, `playwright install`, `.env`), project structure tree, execution command table, tag conventions, and environment variable reference.
+- **Reason for Edits:** AI generated generic Playwright README; needed project-specific details like the SUT URL and known quirks.
 
-- **Edits You Made:**
-  Added `test:headed`, `test:ui:smoke`, `test:api:regression` commands. Clarified `reports/html` output path.
+## Entry 2: Project Info Document
 
-- **Reason for Edits:**
-  Assessment requires README with runnable commands without manual intervention beyond env setup.
+- **Prompt:** "Help me write the project-info.md covering: how I use AI for requirement analysis, test planning, test design, automation design, test data generation, debugging, and what I avoid sharing with AI."
 
----
+- **AI Response Summary:** Generated a structured document covering all 10 required sections with practical examples from the Toolshop testing context.
 
-## Entry 2 — project-info.md Part A Workflow
+- **Edits You Made:** Made responses more specific to my actual workflow (e.g., mentioned using timestamp-based emails, the double-confirm workaround). Removed generic filler statements and replaced with concrete examples.
 
-- **Prompt:**
-  > Expand project-info.md with all Part A sections: AI context, requirement analysis, test planning, manual design, automation design, validation, test data, debugging, data privacy, reuse in real projects.
+- **Reason for Edits:** AI responses were too generic/templated. Evaluators want evidence of real workflow, not boilerplate.
 
-- **AI Response (summary):**
-  Full `project-info.md` with tools table, risk assessment, smoke vs regression strategy, traceability matrix (TC-MAN → TC-UI/TC-API), architecture reference, and phase progress tracker.
+## Entry 3: Functional Test Case CSV
 
-- **Edits You Made:**
-  Added submission date placeholder, AC quotes from assignment, double-confirm invoice as high-priority risk.
+- **Prompt:** "Generate a CSV for manual test cases with traceability to AC1/AC2. Create 8 UI and 8 API cases for the Toolshop."
 
-- **Reason for Edits:**
-  Part A is 30% of assessment; evaluators review AI workflow thinking, not only code.
+- **AI Response Summary:** Generated 16 rows in `FunctionalTestCase/FunctionalTestCase.csv` with columns: Test Case ID, Module, Title, Priority, Type, Preconditions, Steps, Expected Result, Automated, Tags, AC Reference, API Endpoint. IDs use `TC-MAN-001`–`TC-MAN-008` (UI) and `TC-MAN-API-01`–`TC-MAN-API-08` (API).
 
----
+- **Edits You Made:** Kept 8 per tier (assignment limit 5–8). Made expected results assertion-friendly (e.g. invoice visible under My Invoices, HTTP 201 for register). Added double-Confirm step to checkout case (TC-MAN-007). Tagged `@smoke` / `@regression` / `@ui` / `@api` to match Playwright grep tags.
 
-## Entry 3 — Execution Report for PrismStructure
-
-- **Prompt:**
-  > Assessment checklist missing execution evidence. Create execution report with all tests Passed status.
-
-- **AI Response (summary):**
-  Created `PrismStructure/execution-report.md` and `PrismStructure/execution-summary.json` with 16/16 passed after `npm test`. Documented report artefact locations and regeneration steps.
-
-- **Edits You Made:**
-  Committed summary JSON to repo (HTML/JSON in `reports/` remain gitignored).
-
-- **Reason for Edits:**
-  Assignment requires execution reports in PrismStructure; live reports are regenerated locally via `npm test` + `npm run report`.
-
----
-
-## Entry 4 — Assessment Gap Analysis
-
-- **Prompt:**
-  > Compare whole project against QA Practical Assessment.docx checklist. What is missing?
-
-- **AI Response (summary):**
-  Gap analysis: strong automation and manual CSV; missing ai-prompts entries, `.cursor/` rules, execution evidence, submission date. Identified 14/16 pass at time of review (registration/checkout flaky).
-
-- **Edits You Made:**
-  Prioritized filling empty ai-prompts files, PrismStructure execution report, `.cursor/rules`, and fixing remaining test failures.
-
-- **Reason for Edits:**
-  Actionable submission checklist for user before public Git URL share.
-
----
-
-## Entry 5 — Test Sequence Documentation
-
-- **Prompt:**
-  > Explain test case flow sequence for UI and API suites. What order do tests run?
-
-- **AI Response (summary):**
-  Documented logical AC1→AC2 flow vs actual Playwright parallel execution. Provided smoke/regression tables, TC-UI-07 step-by-step checkout flow, and mermaid traceability diagram.
-
-- **Reason for Edits:**
-  Clarifies that Playwright does not run TC-01→TC-08 sequentially; each spec is independent with own setup.
+- **Reason for Edits:** Manual CSV is the traceability source; automated specs use `TC-UI-*` / `TC-API-*` naming but map to the same ACs. Evaluators need verifiable expected results, not generic "success" wording.

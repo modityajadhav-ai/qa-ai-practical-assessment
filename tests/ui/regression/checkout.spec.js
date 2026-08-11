@@ -17,7 +17,6 @@ test.describe('Checkout @ui', () => {
     const productPage = new ProductDetailPage(page);
     await productPage.gotoProduct(productIds[0]);
     await productPage.addToCart();
-    await expect(page.locator('[data-test="cart-quantity"]')).not.toHaveText('0', { timeout: 10000 });
 
     await checkoutPage.goto();
     await checkoutPage.proceedToBilling();

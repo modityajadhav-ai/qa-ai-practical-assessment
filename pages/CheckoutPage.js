@@ -8,8 +8,11 @@ class CheckoutPage extends BasePage {
 
   async goto() {
     const navCart = this.page.locator('[data-test="nav-cart"]');
-    await navCart.waitFor({ state: 'visible', timeout: 15000 });
-    await navCart.click();
+    if (await navCart.isVisible().catch(() => false)) {
+      await navCart.click();
+    } else {
+      await this.page.goto('/checkout');
+    }
     await this.page.waitForLoadState('networkidle');
     await this.waitForCartStep();
   }
@@ -93,7 +96,7 @@ class CheckoutPage extends BasePage {
   }
 
   async confirmPaymentTwice() {
-    const finish = this.page.locator('[data-test="finish"]');
+    const finish = this.page.getByRole('button', { name: 'Confirm' });
 
     const paymentCheck = this.page.waitForResponse(
       (response) => response.url().includes('/payment/check') && response.ok(),
@@ -106,16 +109,27 @@ class CheckoutPage extends BasePage {
       timeout: 15000,
     });
 
-    const invoiceCreate = this.page.waitForResponse(
-      (response) => response.url().includes('/invoices') && response.request().method() === 'POST',
-      { timeout: 20000 },
-    ).catch(() => null);
-    await finish.click();
-    await invoiceCreate;
-    await this.page.getByText(/invoice number is INV-/i).waitFor({
-      state: 'visible',
-      timeout: 20000,
-    });
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const invoiceCreate = this.page.waitForResponse(
+        (response) => response.url().includes('/invoices') && response.request().method() === 'POST',
+        { timeout: 20000 },
+      );
+      await finish.click();
+
+      try {
+        await invoiceCreate;
+        await this.page.getByText(/invoice number is INV-/i).waitFor({
+          state: 'visible',
+          timeout: 15000,
+        });
+        return;
+      } catch (error) {
+        if (attempt === 2) {
+          throw error;
+        }
+        await this.page.waitForTimeout(1000);
+      }
+    }
   }
 
   /**

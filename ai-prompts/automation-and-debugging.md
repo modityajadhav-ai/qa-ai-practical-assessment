@@ -1,87 +1,40 @@
-# AI Prompts — Automation and Debugging
+# AI Prompts – Automation and Debugging
 
-Prompts used for Playwright automation structure, assertions, and analyzing failures/logs.
+## Entry 1: Framework Structure
 
----
+- **Prompt:** "Set up a Playwright JavaScript project using Prism/POM pattern for the Toolshop. I need: pages/ for Page Objects, tests/ui/ and tests/api/ for specs, api/endpoints/ for API services, fixtures/ for Playwright fixtures, helpers/ for domain helpers, and utils/ for generic utilities."
 
-## Entry 1 — UI/API Automation Scaffold (Phase 3)
+- **AI Response Summary:** Generated the full project scaffold:
+  - `playwright.config.js` with `ui-chromium` and `api` projects, reporters under `reports/html`, `reports/json`, `reports/junit`
+  - Page Objects: HomePage, RegisterPage, LoginPage, ProductDetailPage, CheckoutPage, ProfilePage, InvoicesPage
+  - API service classes (`AuthService`, `CartService`, `ProductsService`, `InvoicesService`) wired via `fixtures/api.fixture.js`
+  - Dynamic test data in `utils/data-generator.js` (`buildRegistrationData()`, `randomEmail()`)
 
-- **Prompt:**
-  > Create Playwright UI page objects and API service classes for Toolshop AC1 (register, login, profile) and AC2 (products, cart, checkout with double Confirm, invoices). Use existing fixtures and constants. Max 8 UI and 8 API specs with @smoke and @regression tags.
+- **Debugging Outcome:** Global `fullyParallel: true` is fine for API; the `ui-chromium` project sets `fullyParallel: false` and `workers: 1` locally to avoid login/session conflicts. UI specs use `helpers/ui-auth.helper.js` (`registerAndLogin()`, `loginAsCustomer()`) for isolated authenticated setup.
 
-- **AI Response (summary):**
-  Created `pages/` (Login, Register, Profile, Home, ProductDetail, Checkout, Invoices), `api/endpoints/` (Auth, Cart, Products, Invoices), helpers, and 16 spec files under `tests/ui/` and `tests/api/`. Mapped TC-UI-01–08 and TC-API-01–08 to manual CSV IDs.
+## Entry 2: Selector Strategy
 
-- **Debugging Outcome:**
-  Initial scaffold ran but checkout and login needed live-SUT validation against practicesoftwaretesting.com.
+- **Prompt:** "The Toolshop uses data-test attributes. Generate Playwright locators using data-test selectors for: login form, cart page, checkout steps."
 
----
+- **AI Response Summary:** Provided selectors:
+  - Login: `#email`, `#password`, `getByRole('button', { name: 'Login' })` (per `.cursor/rules/pom-and-api-layer.mdc`)
+  - Cart/checkout: `[data-test="proceed-1"]`, `[data-test="product-quantity"]`, `[data-test="proceed-2"]`, `[data-test="proceed-3"]`, `#payment-method`, `[data-test="finish"]`
+  - Navigation: `[data-test="nav-cart"]`, `[data-test="nav-menu"]`, `[data-test="nav-my-invoices"]`
 
-## Entry 2 — Checkout Double Confirm Failure (TC-UI-07)
+- **Debugging Outcome:** Checkout `data-test` selectors worked directly. Login needed stable IDs and role-based submit because `data-test` login fields were unreliable. Nav locators were added after DevTools inspection.
 
-- **Prompt:**
-  > Checkout test fails waiting for `invoice number is INV-`. Page shows "Payment was successful" with Confirm still visible. Why?
+## Entry 3: Double Confirm Issue
 
-- **AI Response (summary):**
-  Identified two-step payment flow: first Confirm → `POST /payment/check` → "Payment was successful"; second Confirm → `POST /invoices` → invoice number. Rapid double-click skipped the first step completion.
+- **Prompt:** "The checkout requires pressing the Confirm button twice to generate an invoice. How should I handle this in Playwright? Just clicking twice doesn't always work due to timing."
 
-- **Debugging Outcome:**
-  Updated `CheckoutPage.confirmPaymentTwice()` to wait for `/payment/check`, then success message, then second click and invoice API. Test passed.
+- **AI Response Summary:** Suggested `waitForResponse` after the first Confirm (payment check) before clicking again, or a short `waitForTimeout` as a fallback.
 
-- **Validation Notes:**
-  Verified with live network trace: payment/check (200) then invoices (201).
+- **Debugging Outcome:** Implemented `confirmPaymentTwice()` in `pages/CheckoutPage.js`: first click waits for `/payment/check`, then second click waits for `POST /invoices` and the `invoice number is INV-` message. This proved more reliable than a fixed timeout alone.
 
----
+## Entry 4: API Token Management
 
-## Entry 3 — Shared Demo Account Lockout (5 UI login failures)
+- **Prompt:** "How should I manage the bearer token across API tests? Each test needs authentication."
 
-- **Prompt:**
-  > Multiple UI tests fail at `nav-menu` wait after login. Login spec stuck on `/auth/login`.
+- **AI Response Summary:** Recommended `test.beforeEach` to register/login and store the bearer token for dependent API flows, or inline register → login per test for full isolation.
 
-- **AI Response (summary):**
-  Error snapshot showed: "Account locked, too many failed attempts." API login for `customer@practicesoftwaretesting.com` returned HTTP 423. Parallel workers amplified lockout from repeated test runs.
-
-- **Debugging Outcome:**
-  - Added `registerAndLogin()` in `helpers/ui-auth.helper.js` (API register + UI login with unique user).
-  - Fixed `LoginPage.login()` to use `getByRole('button', { name: 'Login' })` and wait for `/users/login` response.
-  - Set local `workers: 1` and `fullyParallel: false` for UI project.
-  - Profile/login specs updated to use dynamic users instead of locked demo account.
-
----
-
-## Entry 4 — Checkout Billing Address / Invoice 422
-
-- **Prompt:**
-  > Checkout passes billing but second Confirm never shows invoice. API returns 422 on POST /invoices.
-
-- **AI Response (summary):**
-  Postcode lookup returned invalid city/state (e.g. random city not in US). Invoice API error: `billing_country does not match the entered address`.
-
-- **Debugging Outcome:**
-  Updated `CheckoutPage.fillBillingAddress()` to fill house number after postcode lookup, then explicitly set street, city (Miami), and state (FL) before proceeding to payment.
-
----
-
-## Entry 5 — Parallel Workers / Flaky Login
-
-- **Prompt:**
-  > What are 4 workers? Tests fail when running full suite in parallel.
-
-- **AI Response (summary):**
-  Explained Playwright workers run tests in parallel processes. Multiple UI tests logging in simultaneously caused flaky failures on shared SUT.
-
-- **Debugging Outcome:**
-  Documented `--workers=1` for stability. Config default set to 1 worker locally; unique user per test reduces shared-state risk.
-
----
-
-## Entry 6 — Chromium-Only Execution
-
-- **Prompt:**
-  > Tests repeat on WebKit, Firefox, Chromium. Want Chromium only.
-
-- **AI Response (summary):**
-  `playwright.config.js` had three UI browser projects. Removed Firefox/WebKit; npm scripts target `ui-chromium` + `api`.
-
-- **Validation Notes:**
-  UI test count reduced from 24 (8×3 browsers) to 8 per run.
+- **Debugging Outcome:** `tests/api/regression/cart-flow.spec.js` uses `beforeEach` with `dataGenerator.buildRegistrationData()` and service fixtures. Smoke specs (e.g. `register.spec.js`, `login.spec.js`) keep setup inline. Tokens are never hardcoded; services receive the token from the login response.

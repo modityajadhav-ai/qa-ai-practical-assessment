@@ -24,6 +24,18 @@ class CheckoutPage extends BasePage {
     });
   }
 
+  /**
+   * Wait until the checkout cart table shows the expected number of line items.
+   * @param {number} minCount
+   */
+  async waitForMinCartLines(minCount) {
+    await this.page.waitForFunction(
+      (min) => document.querySelectorAll('[data-test="product-title"]').length >= min,
+      minCount,
+      { timeout: 15000 },
+    );
+  }
+
   async proceedToBilling() {
     await this.page.locator('[data-test="proceed-1"]').click();
     await this.page.locator('[data-test="proceed-2"]').waitFor({ state: 'visible', timeout: 15000 });

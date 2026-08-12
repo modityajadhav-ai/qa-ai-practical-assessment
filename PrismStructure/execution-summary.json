@@ -1,9 +1,9 @@
 {
-  "executionDate": "2026-08-07",
+  "executionDate": "2026-08-12",
   "command": "npm test",
   "projects": ["ui-chromium", "api"],
   "workers": 1,
-  "durationMinutes": 2.2,
+  "durationMinutes": 2.1,
   "summary": {
     "total": 16,
     "passed": 16,
@@ -20,10 +20,10 @@
       { "id": "TC-UI-02", "status": "passed", "spec": "tests/ui/smoke/login.spec.js" },
       { "id": "TC-UI-03", "status": "passed", "spec": "tests/ui/smoke/profile.spec.js" },
       { "id": "TC-UI-04", "status": "passed", "spec": "tests/ui/smoke/products.spec.js" },
-      { "id": "TC-UI-05", "status": "passed", "spec": "tests/ui/regression/cart.spec.js" },
-      { "id": "TC-UI-06", "status": "passed", "spec": "tests/ui/regression/cart.spec.js" },
-      { "id": "TC-UI-07", "status": "passed", "spec": "tests/ui/regression/checkout.spec.js" },
-      { "id": "TC-UI-08", "status": "passed", "spec": "tests/ui/regression/login-negative.spec.js" }
+      { "id": "TC-UI-05", "status": "passed", "spec": "tests/ui/regression/02-cart.spec.js" },
+      { "id": "TC-UI-06", "status": "passed", "spec": "tests/ui/regression/02-cart.spec.js" },
+      { "id": "TC-UI-07", "status": "passed", "spec": "tests/ui/regression/03-checkout.spec.js" },
+      { "id": "TC-UI-08", "status": "passed", "spec": "tests/ui/regression/01-login-negative.spec.js" }
     ]
   },
   "api": {

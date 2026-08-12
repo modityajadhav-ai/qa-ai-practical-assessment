@@ -29,52 +29,51 @@ npm run report   # opens reports/html/
 qa-ai-practical-assessment/
 │
 ├── FunctionalTestCase/          # Manual test cases (CSV) — source for automation
-├── PrismStructure/              # Test design artefacts (Prism methodology)
-├── ai-prompts/                  # AI prompt templates for test lifecycle
-├── screenshots/                 # Manual / debug screenshots
+├── PrismStructure/              # Requirements, API plan, execution evidence
+├── ai-prompts/                  # AI prompt history for the test lifecycle
+├── docs/                        # Architecture notes
 │
 ├── config/                      # Runtime configuration
-│   ├── env.config.js            # Loads .env and exports typed config
-│   └── test-config.js           # Static test constants (tags, paths)
+│   ├── env.config.js            # Loads .env and exports config
+│   └── test-config.js           # Static test constants
 │
-├── constants/                   # Shared constants (routes, endpoints, tags)
+├── constants/                   # Shared constants
 │   ├── routes.js
 │   ├── api-endpoints.js
-│   └── tags.js
+│   ├── tags.js
+│   └── test-users.js
 │
 ├── pages/                       # Page Object Model (UI)
-│   ├── base/                    # BasePage and shared abstractions
-│   └── components/            # Reusable UI components (header, footer, etc.)
+│   └── base/                    # BasePage
 │
 ├── api/                         # API layer
-│   ├── clients/                 # API client classes (extend BaseApiClient)
-│   ├── endpoints/               # Endpoint-specific service classes
-│   └── schemas/                 # Response validation schemas
+│   ├── clients/                 # BaseApiClient
+│   └── endpoints/               # Auth, Cart, Products, Invoices services
 │
 ├── fixtures/                    # Playwright custom fixtures
-│   ├── ui.fixture.js            # UI test fixture (page objects)
-│   └── api.fixture.js           # API test fixture (API client)
+│   ├── ui.fixture.js
+│   └── api.fixture.js
 │
-├── helpers/                     # Domain-specific helper functions
-│   ├── auth.helper.js
+├── helpers/                     # Domain helpers
+│   ├── ui-auth.helper.js
+│   ├── ui-products.helper.js
+│   ├── api.helper.js
 │   └── wait.helper.js
 │
-├── utils/                       # Generic utility functions
-│   ├── logger.js
+├── utils/                       # Generic utilities
+│   ├── data-generator.js
 │   ├── file-reader.js
-│   └── data-generator.js
+│   └── logger.js
 │
-├── test-data/                   # Static test data (JSON, CSV)
+├── test-data/                   # Static test data (JSON)
 │   ├── ui/
 │   └── api/
 │
-├── tests/                       # Test specifications
-│   ├── ui/
-│   │   ├── smoke/               # @smoke UI tests
-│   │   └── regression/          # @regression UI tests
-│   └── api/
-│       ├── smoke/               # @smoke API tests
-│       └── regression/          # @regression API tests
+├── tests/                       # Specs (8 UI + 8 API)
+│   ├── ui/smoke/
+│   ├── ui/regression/           # 01-login-negative, 02-cart, 03-checkout
+│   ├── api/smoke/
+│   └── api/regression/
 │
 ├── reports/                     # Generated reports (gitignored)
 │   ├── html/
@@ -83,6 +82,7 @@ qa-ai-practical-assessment/
 │
 ├── playwright.config.js
 ├── package.json
+├── project-info.md
 ├── .env.example
 └── .gitignore
 ```
@@ -111,10 +111,10 @@ Tests use Playwright grep tags for suite selection:
 - `@ui` — UI-specific marker
 - `@api` — API-specific marker
 
-Example tag usage in a spec (when tests are added):
+Example:
 
 ```js
-test('should load home page @smoke @ui @regression', async ({ page }) => { ... });
+test('TC-UI-02 should login with valid credentials @smoke @regression @ui', async ({ loginPage }) => { ... });
 ```
 
 ## Environment Variables
@@ -128,6 +128,7 @@ Copy `.env.example` to `.env` and configure:
 | `TEST_USER_EMAIL` | — | Login email |
 | `TEST_USER_PASSWORD` | — | Login password |
 | `TEST_TIMEOUT` | 60000 | Global test timeout (ms) |
+| `API_REQUEST_TIMEOUT` | 30000 | API request timeout (ms) |
 | `HEADLESS` | true | Headless browser mode |
 
 ## Architecture Documentation

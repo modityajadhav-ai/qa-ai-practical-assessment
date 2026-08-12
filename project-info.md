@@ -4,11 +4,6 @@
 
 **Application Under Test:** Practice Software Testing Toolshop — Checkout & Application Flow
 
-**Assessment Start Date:** 06 Aug 2026
-
-**Submission Date:** 07 Aug 2026
-
----
 
 ## Project Summary
 

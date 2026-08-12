@@ -45,7 +45,10 @@ class BaseApiClient {
    * @param {object} [options]
    */
   get(endpoint, options = {}) {
-    return this.request.get(this.buildUrl(endpoint), options);
+    return this.request.get(this.buildUrl(endpoint), {
+      timeout: env.apiRequestTimeout,
+      ...options,
+    });
   }
 
   /**
@@ -53,7 +56,10 @@ class BaseApiClient {
    * @param {object} [options]
    */
   post(endpoint, options = {}) {
-    return this.request.post(this.buildUrl(endpoint), options);
+    return this.request.post(this.buildUrl(endpoint), {
+      timeout: env.apiRequestTimeout,
+      ...options,
+    });
   }
 }
 

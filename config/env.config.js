@@ -18,6 +18,7 @@ const env = {
   expectTimeout: Number(process.env.EXPECT_TIMEOUT) || 10000,
   actionTimeout: Number(process.env.ACTION_TIMEOUT) || 15000,
   navigationTimeout: Number(process.env.NAVIGATION_TIMEOUT) || 30000,
+  apiRequestTimeout: Number(process.env.API_REQUEST_TIMEOUT) || 30000,
 
   headless: process.env.HEADLESS !== 'false',
   slowMo: Number(process.env.SLOW_MO) || 0,

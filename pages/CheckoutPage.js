@@ -124,15 +124,18 @@ class CheckoutPage extends BasePage {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const invoiceCreate = this.page.waitForResponse(
         (response) => response.url().includes('/invoices') && response.request().method() === 'POST',
-        { timeout: 20000 },
+        { timeout: 7000 },
       );
       await finish.click();
 
       try {
-        await invoiceCreate;
+        const response = await invoiceCreate;
+        if (!response.ok()) {
+          throw new Error(`Invoice creation failed: ${response.status()} ${await response.text()}`);
+        }
         await this.page.getByText(/invoice number is INV-/i).waitFor({
           state: 'visible',
-          timeout: 15000,
+          timeout: 10000,
         });
         return;
       } catch (error) {

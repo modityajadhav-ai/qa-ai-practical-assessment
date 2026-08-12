@@ -13,6 +13,8 @@ test.describe('Checkout @ui', () => {
     invoicesPage,
     page,
   }) => {
+    test.setTimeout(90000);
+
     const productIds = await findPurchasableProductIds(page, 1);
     const productPage = new ProductDetailPage(page);
     await productPage.gotoProduct(productIds[0]);
